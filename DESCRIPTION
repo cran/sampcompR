@@ -1,6 +1,6 @@
 Package: sampcompR
 Title: Comparing and Visualizing Differences Between Surveys
-Version: 0.2.1
+Version: 0.2.3
 Authors@R: 
     c(person("Bjoern", "Rohr",  email= "bjoern.rohr@gesis.org", role = c("aut", "cre","cph")),
     person("Barbara", "Felderer", email= "barbara.felderer@gesis.org", role = c("aut")))
@@ -11,13 +11,14 @@ RoxygenNote: 7.3.1
 Imports: boot, boot.pval, data.table, dplyr, forcats, furrr, future,
         ggplot2, Hmisc, lmtest, magrittr, psych, purrr, readr,
         reshape2, sandwich, stats, survey, svrep, tibble, tidyr,
-Suggests: testthat (>= 3.0.0), wooldridge, jtools, utils, parallel
+Suggests: testthat (>= 3.0.0), wooldridge, jtools, utils, parallel,
+        stargazer
 Config/testthat/edition: 3
 URL: https://bjoernrohr.github.io/sampcompR/
 NeedsCompilation: no
-Packaged: 2024-07-14 10:23:50 UTC; rohrbn
+Packaged: 2024-08-19 06:55:41 UTC; rohrbn
 Author: Bjoern Rohr [aut, cre, cph],
   Barbara Felderer [aut]
 Maintainer: Bjoern Rohr <bjoern.rohr@gesis.org>
 Repository: CRAN
-Date/Publication: 2024-07-15 19:11:15 UTC
+Date/Publication: 2024-08-19 08:20:01 UTC
