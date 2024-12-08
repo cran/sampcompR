@@ -41,17 +41,15 @@ the \link[stargazer]{stargazer} function.
 \examples{
 
 ## Get Data for comparison
-require(wooldridge)
-card<-wooldridge::card
 
-south <- card[card$south==1,]
+data("card")
+
 north <- card[card$south==0,]
-black <- card[card$black==1,]
 white <- card[card$black==0,]
 
 ## use the function to plot the data 
 univar_data<-sampcompR::uni_compare(dfs = c("north","white"),
-                                    benchmarks = c("south","black"),
+                                    benchmarks = c("card","card"),
                                     variables= c("age","educ","fatheduc","motheduc","wage","IQ"),
                                     funct = "abs_rel_mean",
                                     nboots=0,

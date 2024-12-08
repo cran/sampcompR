@@ -763,8 +763,8 @@
 # #' @examples
 # #' 
 # #' ## Get Data for comparison
-# #' require(wooldridge)
-# #' card<-wooldridge::card
+# #' 
+# #' data("card")
 # #' 
 # #' south <- card[card$south==1,]
 # #' north <- card[card$south==0,]
@@ -1454,23 +1454,21 @@ multi_reg_plotter<-function(multi_reg_object, df_lab=NULL, benchmark_lab=NULL, p
 #' @examples
 #' 
 #' ## Get Data for comparison
-#' require(wooldridge)
-#' card<-wooldridge::card
 #' 
-#' south <- card[card$south==1,]
+#' data("card")
+#' 
 #' north <- card[card$south==0,]
-#' black <- card[card$black==1,]
 #' white <- card[card$black==0,]
 #' 
 #' ## use the function to plot the data
 #' multi_data1 <- sampcompR::multi_compare(df = north, 
-#'                                         bench = south,
+#'                                         bench = card,
 #'                                         independent = c("age","fatheduc","motheduc","IQ"),
 #'                                         dependent = c("educ","wage"),
 #'                                         family = "ols") 
 #'                                      
-#' multi_data2 <- sampcompR::multi_compare(df = black, 
-#'                                         bench = white,
+#' multi_data2 <- sampcompR::multi_compare(df = white, 
+#'                                         bench = card,
 #'                                         independent = c("age","fatheduc","motheduc","IQ"),
 #'                                         dependent = c("educ","wage"),
 #'                                         family = "ols") 
@@ -1952,8 +1950,8 @@ difference_summary2<-function(results_object,breaks,sum_weights_indep=NULL,sum_w
 # #' @examples
 # #' 
 # #' ## Get Data for comparison
-# #' require(wooldridge)
-# #' card<-wooldridge::card
+# #' 
+# #' data("card")
 # #' 
 # #' south <- card[card$south==1,]
 # #' north <- card[card$south==0,]
