@@ -1,5 +1,19 @@
 # sampcompR (development version)
 
+## Changes in version 0.3.0 (2025-02-03)
+
+* fix small bug in shapes of uni_compare_plot
+* add a new function, to create a heatmap of relative bias for bivariate comparison
+* add a new function, to show AAB or AARB in Pearson's r per variable as a table
+* add a new function, to calculate missings per variable and display them in a table
+
+
+## Changes in version 0.2.7 (2025-21-01)
+
+* fixed a small error in biv_compare that occurred when sample size was very small and ended in an Error message.
+* Added absolute relative bias to biv_compare output
+
+
 ## Changes in version 0.2.6 (2024-14-11)
 
 * As the wooldridge package was archived on CRAN, and our examples rely on the card data of wooldridge, we added the card data to our package

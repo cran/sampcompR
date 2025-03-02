@@ -204,7 +204,6 @@ biv_comp_subfunction<-function(df, benchmark, data = TRUE, corrtype="r",plot_tit
   fischer_cor_df<- suppressWarnings(psych::fisherz(cor_matrix_df$r))
   fischer_cor_bench<- suppressWarnings(psych::fisherz(cor_matrix_bench$r))
   
-  
   fischer_z_test<-suppressWarnings(psych::paired.r(cor_matrix_df$r,cor_matrix_bench$r,n=cor_matrix_df$n, n2=cor_matrix_bench$n))
   fischer_z_test$p[round(cor_matrix_df$r,digits=3) %in%"-1" & round(cor_matrix_bench$r,digits=3) %in% "-1"]<-1
   fischer_z_test$p[fischer_z_test$p=="NaN"]<-NA
@@ -220,7 +219,6 @@ biv_comp_subfunction<-function(df, benchmark, data = TRUE, corrtype="r",plot_tit
                                                                    n = ncol(fischer_z_test$p)),
                                                       ncol = ncol(fischer_z_test$p))}}
 
-  
   ### Compute Comparison Matrix
   comp_matrix<-fischer_cor_df
   comp_matrix[comp_matrix=="Inf"]<-NA
@@ -287,12 +285,26 @@ biv_comp_subfunction<-function(df, benchmark, data = TRUE, corrtype="r",plot_tit
     edge_matrix<- comp_matrix_df2[is.na(comp_matrix_df2$value),]
   }
 
+  ### add r and bench_r to df
+  
+  comp_matrix_df$corr<-reshape2::melt(cor_matrix_df$r)$value
+  comp_matrix_df$corr_bench<-reshape2::melt(cor_matrix_bench$r)$value
+  
+  ### add p_values and bench_p_values to df
+  
+  comp_matrix_df$p<-reshape2::melt(cor_matrix_df$P)$value
+  comp_matrix_df$bench_p<-reshape2::melt(cor_matrix_bench$P)$value
+  comp_matrix_df$p_diff<-reshape2::melt(fischer_z_test$p)$value
+  
   #### add difference to data frame
 
   difference_r<-(cor_matrix_df$r-cor_matrix_bench$r)
   difference_r<-reshape2::melt(difference_r)
   comp_matrix_df$difference_r<-difference_r$value
 
+  ### add absolute relative difference to data frame
+  comp_matrix_df$abs_rel_difference_r<-reshape2::melt(abs((cor_matrix_df$r-cor_matrix_bench$r)/cor_matrix_bench$r))$value
+  
   ### change gradient ###
 
   alpha_matrix<-(abs(cor_matrix_df$r-cor_matrix_bench$r)/2/5)+0.8
@@ -312,7 +324,7 @@ biv_comp_subfunction<-function(df, benchmark, data = TRUE, corrtype="r",plot_tit
   if (is.null(varlabels)) varlabels<- unique(comp_matrix_df$x)
 
 
-  ### build biger out matrix ###
+  ### build bigger out matrix ###
 
 
   cor_matrix_df[[1]][upper.tri(cor_matrix_df[[1]], diag= TRUE)]<-NA
@@ -572,7 +584,11 @@ biv_compare<-function (dfs, benchmarks, variables=NULL, corrtype="r", data = TRU
   for (i in 1:length(dfs)){
 
     curr_df<-get(dfs[i])
+    if(is.function(curr_df)) stop(paste("dfs must not be named the same as a existing function"))
+    
     curr_bench<-get(benchmarks[i])
+    if(is.function(curr_bench)) stop(paste("benchmarks must not be named the same as a existing function"))
+    
 
     if (is.null(weight)==FALSE) {
     if (is.na(weight[i])==FALSE) {
@@ -643,7 +659,6 @@ biv_compare<-function (dfs, benchmarks, variables=NULL, corrtype="r", data = TRU
 
 
   }
-
 
   names(plot_list)<-c(names(plot_list[1]),paste("correlation_data_",plots_label[1:length(dfs)],sep=""))
 
@@ -748,7 +763,7 @@ biv_compare<-function (dfs, benchmarks, variables=NULL, corrtype="r", data = TRU
   if(length(varlabels)==length(variables)) varlabels<-varlabels[variables %in% unique(plot_list[[1]]$x)]
   
   #return(list(variables,varlabels,unique(plot_title[[1]]$x)))
-  plot_list[[1]]<-plot_list[[1]] |> 
+  plot_list[[1]]<-plot_list[[1]] %>%
     dplyr::mutate(x=forcats::fct_recode(plot_list[[1]]$x, !!! stats::setNames(order, varlabels)),
            y=forcats::fct_recode(plot_list[[1]]$y, !!! stats::setNames(order, varlabels)))
   
@@ -772,7 +787,8 @@ biv_compare<-function (dfs, benchmarks, variables=NULL, corrtype="r", data = TRU
   plot_list$colors<-colors2
   plot_list$breaks <-breaks 
   plot_list$shape<-plot_list[[1]]$shape
-  plot_list$plots_label<-as.character(unique(plot_list[[1]]$samp_name))
+  #plot_list$plots_label<-as.character(unique(plot_list[[1]]$samp_name))
+  plot_list$plots_label<-plots_label
   
   if (is.null(plot_title)==FALSE) plot_list$plot_title<-plot_title
   if (is.null(plot_title)) plot_list$plot_title<-NA
@@ -850,7 +866,7 @@ biv_compare<-function (dfs, benchmarks, variables=NULL, corrtype="r", data = TRU
     ggplot2::guides(alpha="none",
                     fill  = ggplot2::guide_legend(order = 1),
                     shape = ggplot2::guide_legend(order = 2))+
-    ggplot2::facet_wrap(~ samp, labeller = ggplot2::labeller(samp = labellist),ncol = ncol_facet)
+    ggplot2::facet_wrap(~ factor(samp,levels=unique(samp),labels = labellist), labeller = ggplot2::labeller(samp = labellist),ncol = ncol_facet)
 
   if(note==TRUE) comparison_plot<-comparison_plot + ggplot2::labs(caption = plot_list[[1]]$note_text)
 
@@ -1113,9 +1129,9 @@ empty_finder <- function(df,samp_names){
       for (k in 1:length (samps)) {
         
         if ((length(df$value[df[,1]==varnames[i] & df[,2]==varnames[j] & df$samp==samps[k]])==0) &
-            (any((df[,1]==varnames[i] & df[,2]==varnames[j] & is.na(df[,3]) & df$samp!=samps[k])))==FALSE) df<-rbind(df, c(varnames[i],varnames[j],"X",NA,NA,samps[k],sampnames[k]))
+            (any((df[,1]==varnames[i] & df[,2]==varnames[j] & is.na(df[,3]) & df$samp!=samps[k])))==FALSE) df<-rbind(df, c(varnames[i],varnames[j],"X",NA,NA,NA,NA,NA,NA,NA,NA,samps[k],sampnames[k]))
         if ((length(df$value[df[,1]==varnames[i] & df[,2]==varnames[j] & df$samp==samps[k]])==0) &
-            (any((df[,1]==varnames[i] & df[,2]==varnames[j] & df$samp!=samps[k])))==TRUE) df<-rbind(df, c(varnames[i],varnames[j],NA,NA,NA,samps[k],sampnames[k]))
+            (any((df[,1]==varnames[i] & df[,2]==varnames[j] & df$samp!=samps[k])))==TRUE) df<-rbind(df, c(varnames[i],varnames[j],NA,NA,NA,NA,NA,NA,NA,NA,NA,samps[k],sampnames[k]))
       }
       
     }
@@ -1519,7 +1535,7 @@ wgt_cor<-function(df, row, col, i = NULL, weight_var = NULL, stratas = NULL, ids
       if(sum(is.na(boot_object)) > 0 & is.null(iteration)==FALSE){
         
         warning(paste(sum(is.na(boot_object)), "of the", length(boot_object),
-                      "bootstraps contain zero combined cases for the variable pair of:",
+                      "bootstraps contain not enough combined cases for the variable pair of:",
                       row[iteration],"and",col[iteration],".\n"))
       }
       if(benchmark==TRUE & sum(is.na(boot_object))==length(boot_object)) return("NaN")
@@ -1532,13 +1548,13 @@ wgt_cor<-function(df, row, col, i = NULL, weight_var = NULL, stratas = NULL, ids
       
       
       ### get p_values up to 0.00001
-      while(in_interval){
+      while(in_interval & alpha<1){
         alpha <- alpha + 0.001
         #if(iteration==69)browser()
         if(is.null(r) & percentile_ci==TRUE) cis<-c(stats::quantile(boot_object, probs=(1-(alpha/2)),na.rm=TRUE),stats::quantile(boot_object, probs=(alpha/2),na.rm=TRUE))
         if(is.null(r) & percentile_ci==FALSE){
           SE=stats::sd(boot_object,na.rm = T)
-          if(alpha=="2") browser()#return(1)
+          #if(alpha=="2") #browser()#return(1)
           cis<-c(r1 + stats::qnorm(1-alpha/2) * SE,
                  r1 - stats::qnorm(1-alpha/2) * SE)}
 
@@ -1566,7 +1582,7 @@ wgt_cor<-function(df, row, col, i = NULL, weight_var = NULL, stratas = NULL, ids
       alpha<-alpha-0.001
       in_interval<-TRUE
       
-      while(in_interval){
+      while(in_interval & alpha<1){
         alpha <- alpha + 0.00001
         if(is.null(r)==TRUE & percentile_ci==TRUE) cis<-c(stats::quantile(boot_object, probs=(1-(alpha/2)),na.rm=TRUE),stats::quantile(boot_object, probs=(alpha/2),na.rm=TRUE))
         

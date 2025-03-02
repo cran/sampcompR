@@ -797,6 +797,9 @@ multi_glm_compare<-function(df,benchmark,independent=NULL,dependent=NULL,formula
                     sep = "", collapse = NULL))
   }
 
+  if(is.function(df)) stop(paste("df must not be named the same as a existing function"))
+  if(is.function(benchmark)) stop(paste("benchmark must not be named the same as a existing function"))
+  
   dependent<-dependent_checker(df=df,dependent = dependent, dfname = name_old_df)
   dependent<-dependent_checker(df=benchmark,dependent = dependent, dfname = name_old_benchmark)
 
@@ -1800,7 +1803,7 @@ multi_compare <- function(df,benchmark,independent=NULL,dependent=NULL, formula_
 # #' \code{plot_multi_compare} plots multipe \code{multi_compare_objects} together
 # #'
 # #' @param multi_compare_objects A character vector containing the names of one or more \code{multi_compare_objects}.
-# #' Every object will be displayed seperately in \code{facet_warp} of \code{ggplot}.
+# #' Every object will be displayed seperately in \code{facet_wrap} of \code{ggplot}.
 # #' @param plots_label A character vector of the same lengths as \code{multi_compare_objects}, to name the different objects
 # #' in facet_warp of ggplot.
 # #' @param plot_title A string containing the title of the vizualization
@@ -3255,7 +3258,7 @@ boot_pvalues3_multi<-function(boot_object,reference=0,ref=NULL,
   if(sum(is.na(boot_object)) > 0 & is.null(col_numb)==FALSE & model_less==0){
     
     warning(paste(sum(is.na(boot_object)), "of the", length(boot_object),
-                  "bootstraps contain zero combined cases for the variable pair of:",
+                  "bootstraps contain not enough combined cases for the variable pair of:",
                   row[row_numb],"and",col[col_numb],".\n"))
   }}
   
@@ -3267,7 +3270,7 @@ boot_pvalues3_multi<-function(boot_object,reference=0,ref=NULL,
 
   
   ### get p_values up to 0.00001
-  while(in_interval){
+  while(in_interval & alpha<1){
     alpha <- alpha + 0.001
     if(is.null(ref)& percentile_ci==FALSE) cis<-c(stats::quantile(boot_object, probs=(1-(alpha/2)),na.rm=TRUE),stats::quantile(boot_object, probs=(alpha/2),na.rm=TRUE))
     if(is.null(ref)==TRUE & percentile_ci==FALSE){
@@ -3297,7 +3300,7 @@ boot_pvalues3_multi<-function(boot_object,reference=0,ref=NULL,
   alpha<-alpha-0.001
   in_interval<-TRUE
   
-  while(in_interval){
+  while(in_interval & alpha<1){
     alpha <- alpha + 0.00001
     if(is.null(ref)==TRUE & percentile_ci==TRUE) cis<-c(stats::quantile(boot_object, probs=(1-(alpha/2)),na.rm=TRUE),stats::quantile(boot_object, probs=(alpha/2),na.rm=TRUE))
     if(is.null(ref)==TRUE & percentile_ci==FALSE){
