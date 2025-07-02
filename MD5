@@ -1,7 +1,7 @@
-b254d433d50537491cc432da6d38ef5e *DESCRIPTION
+42379d3746befa1f2e1f5cdc637c012d *DESCRIPTION
 f651874b03ae89e5d2c189e9e55c0e73 *NAMESPACE
-d96cfc97826b2c5a5600496c30b21f41 *NEWS.md
-4c0208e4a0b7486f64c0aa5f2e3ba93e *R/Bivdiff.R
+28ee23c5820fa84700d06ae8d3090e9c *NEWS.md
+67ca2957ef435c1113abe84a6d55921e *R/Bivdiff.R
 eee861ef25f57bdb82663bff07c31e1c *R/Bivdiff2.R
 4c9356cc138bef357f1ff099f67dc39f *R/Bivdiff_Plot.R
 3a2fb829cb628938c1fa87baf5f19d3a *R/Data_equalizer_Function.R
@@ -12,10 +12,10 @@ d49d8a6f34494db5b8c9ab602b24aa45 *R/Multidiff_2.R
 751bfadf4db0507a0cd0691dae16f98b *R/Multidiff_Plot.R
 9eb0694eb17be115509be4d1ae8e6982 *R/Output_Tables.R
 2f1007658545a50de7a8312e2ab0b846 *R/Tables_to_DF_Function.R
-06c3b98238064a08bccb6ea9fd828f50 *R/Unidiff.R
+e2ce1fccb248a8f571d0b15184b9344e *R/Unidiff.R
 5335b87dc29d6048f6428a23ae1717d1 *R/Unidiff2.R
 aaeb15263abba930ff6647a34f629b66 *R/Unidiff3.R
-79e2d7c887d60eeb36aa4465ea838078 *R/Unidiff_Plot.R
+7da4ada22b74e4da65b99f892774a730 *R/Unidiff_Plot.R
 a2cabe0162f85f9c2b6d33604d3c21ea *R/card.R
 4cb1dee9fead5e0551cebd93b853c396 *README.md
 6542274e62f04872138c1de52c079251 *data/card.RData
@@ -40,7 +40,7 @@ a5f572da6d20de01d3d88bc22e9fb3f5 *man/multi_compare.Rd
 43380e6f23128bb980409080ac8eddd4 *man/multi_per_variable.Rd
 af16bdae09333a91149f086b3986e12e *man/plot_biv_compare.Rd
 5d4af6889be5137d0116ae36906c32ab *man/plot_multi_compare.Rd
-adeaf478ff79ae4d7021d39c731c5fcb *man/plot_uni_compare.Rd
+e39af083c20b3b15b67e3f8e53a153a8 *man/plot_uni_compare.Rd
 e4e3b113d62879532f02a64937e12e86 *man/sampcompR.Rd
 bbe481d7678acc888195767affbea4ca *man/uni_compare.Rd
 129261ac773359ffc5f0604b5121172e *man/uni_compare_table.Rd
