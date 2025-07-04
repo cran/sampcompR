@@ -1,5 +1,10 @@
 # sampcompR (development version)
 
+## Changes in version 0.3.1.2 (2025-03-07)
+* Fixed a small bug where multivariate biases got the wrong color, when one type
+of bias was not present
+
+
 ## Changes in version 0.3.1.1 (2025-02-07)
 * Fixed a small bug so univariate and bivariate bias functions also work with factor variables
 

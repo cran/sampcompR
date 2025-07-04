@@ -1,6 +1,6 @@
-42379d3746befa1f2e1f5cdc637c012d *DESCRIPTION
+ea199abeb2ca2e4aa8b3063c6f70c172 *DESCRIPTION
 f651874b03ae89e5d2c189e9e55c0e73 *NAMESPACE
-28ee23c5820fa84700d06ae8d3090e9c *NEWS.md
+59160c86a748205dbd7f63d95144ef9e *NEWS.md
 67ca2957ef435c1113abe84a6d55921e *R/Bivdiff.R
 eee861ef25f57bdb82663bff07c31e1c *R/Bivdiff2.R
 4c9356cc138bef357f1ff099f67dc39f *R/Bivdiff_Plot.R
@@ -9,7 +9,7 @@ eee861ef25f57bdb82663bff07c31e1c *R/Bivdiff2.R
 8ddf9cd3c694c290c516dd7dbd09bf3f *R/Multidiff.R
 a252cf7af65e836b43b7665487a51654 *R/Multidiff3_old.R
 d49d8a6f34494db5b8c9ab602b24aa45 *R/Multidiff_2.R
-751bfadf4db0507a0cd0691dae16f98b *R/Multidiff_Plot.R
+ac5f8f2e67b33400e96cbb65270df072 *R/Multidiff_Plot.R
 9eb0694eb17be115509be4d1ae8e6982 *R/Output_Tables.R
 2f1007658545a50de7a8312e2ab0b846 *R/Tables_to_DF_Function.R
 e2ce1fccb248a8f571d0b15184b9344e *R/Unidiff.R
