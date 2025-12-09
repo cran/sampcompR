@@ -69,6 +69,7 @@
 #' 
 #' ## Get Data for comparison
 #' 
+#' \dontrun{
 #' data("card")
 #' 
 #' north <- card[card$south==0,]
@@ -81,6 +82,7 @@
 #'                                    data=TRUE)
 #'                         
 #' sampcompR::plot_biv_compare(bivar_data)
+#'}
 #'
 #' @export
 
@@ -342,6 +344,7 @@ plot_biv_compare<-function (biv_data_object, plot_title=NULL, plots_label=NULL,
 #' 
 #' ## Get Data for comparison
 #' 
+#' \dontrun{
 #' data("card")
 #' 
 #' north <- card[card$south==0,]
@@ -358,6 +361,7 @@ plot_biv_compare<-function (biv_data_object, plot_title=NULL, plots_label=NULL,
 #'
 #' Absolute_Relative_Bias_Plot<-sampcompR::heatmap_biv_compare(bivar_data,value = "AARB")
 #' Absolute_Relative_Bias_Plot
+#' }
 #'
 #'
 #' @export

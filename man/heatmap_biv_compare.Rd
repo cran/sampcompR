@@ -99,6 +99,7 @@ between the data frames and the benchmarks.
 
 ## Get Data for comparison
 
+\dontrun{
 data("card")
 
 north <- card[card$south==0,]
@@ -115,6 +116,7 @@ Absolute_Bias_Plot
 
 Absolute_Relative_Bias_Plot<-sampcompR::heatmap_biv_compare(bivar_data,value = "AARB")
 Absolute_Relative_Bias_Plot
+}
 
 
 }

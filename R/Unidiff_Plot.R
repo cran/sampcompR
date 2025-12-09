@@ -1615,6 +1615,9 @@ MEAN_PERC_DIST <- function(x, y, i,
 #' containing a label for the x-axis and y-axis.
 #' @param summet_size A number to determine the size of the displayed 
 #' \code{summetric} in the plot.
+#' @param summet_position A character string, to choose the position of 
+#' \code{summetric}. Can either be "top_right"(default),
+#' "bottom_right", "bottom_left", or "top_left".
 #' @param plot_title A character string containing the title of the plot.
 #' @param conf_adjustment If \code{conf_adjustment = TRUE} the confidence level 
 #' of the confidence interval will be
@@ -1662,6 +1665,7 @@ plot_uni_compare<-function(uni_compare_objects, name_dfs=NULL,
                            name_benchmarks=NULL, summetric=NULL, colors=NULL,
                            shapes=NULL, legendlabels=NULL, legendtitle=NULL , 
                            label_x=NULL, label_y=NULL,summet_size=NULL, 
+                           summet_position="top_right",
                            point_size=NULL,errorbar_size=NULL,plot_title=NULL,
                            conf_adjustment=FALSE, varlabels = NULL, ndigits=3) {
   
@@ -1809,9 +1813,28 @@ plot_uni_compare<-function(uni_compare_objects, name_dfs=NULL,
     ggplot2::theme(axis.text.y = ggplot2::element_text( vjust =0.33, hjust=0))
 
   if (is.null(uni_compare_objects$label_summet) == FALSE) {
-    Plot <- Plot + ggplot2::geom_label(ggplot2::aes(x = Inf, y = Inf, hjust = 1, vjust = 1, label = uni_compare_objects$label_summetric),
-                                       fill = ggplot2::alpha("white", 0.02), color = ggplot2::alpha("black", 0.1), size=uni_compare_objects$summet_size
-    )
+    
+    if(summet_position=="top_right"){
+      Plot <- Plot + ggplot2::geom_label(ggplot2::aes(x = Inf, y = Inf, hjust = 1, vjust = 1, label = uni_compare_objects$label_summetric),
+                                         fill = ggplot2::alpha("white", 0.02), color = ggplot2::alpha("black", 0.1), size=uni_compare_objects$summet_size)
+    }
+    
+    if(summet_position=="top_left"){
+      Plot <- Plot + ggplot2::geom_label(ggplot2::aes(x = -Inf, y = Inf, hjust = 0, vjust = 1, label = uni_compare_objects$label_summetric),
+                                         fill = ggplot2::alpha("white", 0.02), color = ggplot2::alpha("black", 0.1), size=uni_compare_objects$summet_size)
+    }
+    
+    if(summet_position=="bottom_right"){
+      Plot <- Plot + ggplot2::geom_label(ggplot2::aes(x = Inf, y = -Inf, hjust = 1, vjust = 0, label = uni_compare_objects$label_summetric),
+                                         fill = ggplot2::alpha("white", 0.02), color = ggplot2::alpha("black", 0.1), size=uni_compare_objects$summet_size)
+    }
+    
+    if(summet_position=="bottom_left"){
+      Plot <- Plot + ggplot2::geom_label(ggplot2::aes(x = -Inf, y = -Inf, hjust = 0, vjust = 0, label = uni_compare_objects$label_summetric),
+                                         fill = ggplot2::alpha("white", 0.02), color = ggplot2::alpha("black", 0.1), size=uni_compare_objects$summet_size)
+    }
+    
+
   }
   if (is.null(uni_compare_objects$plot_title) == FALSE) Plot <- Plot + ggplot2::ggtitle(uni_compare_objects$plot_title)
   
@@ -2262,12 +2285,29 @@ chi_square_df<- function(dfs,benchmarks, name_dfs=NULL, name_benchmarks=NULL, va
 #' 
 #' @return A list containing the R-indicator, and its standard error for every data frame.
 #' 
-#' @note The calculated R-indicator is based on Shlomo et al., (2012).
+#' @note The calculated R-indicator is based on Shlomo et al., (2012). The calculation of 
+#' its standard error is based on functions provided by Shouten & Schlomo (2015), 
+#' and on Github (https://github.com/addinall/RISQ) 
+#' 
+#' The related subfunctions (getVarianceRSampleBased, weightedVar & getTrace) are licensed under 
+#' the MIT License (MIT)
+#' 
+#' Copyright (c) 2015 addinall
+#' 
+#' Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#' 
+#' The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#' 
 #' 
 #' @references 
 #' * Shlomo, N., Skinner, C., & Schouten, B. (2012). Estimation of an 
 #' indicator of the representativeness of survey response. Journal of Statistical 
 #' Planning and Inference, 142(1), 201–211. https://doi.org/10.1016/j.jspi.2011.07.008
+#' 
+#' * Shouten B. & Shlomo, N. (2015) RISQ manual 2.1, 
+#' https://hummedia.manchester.ac.uk/institutes/cmist/risq/RISQ-manual-v21.pdf
+#' 
+#' 
 
 #' 
 #' @examples
@@ -2323,7 +2363,7 @@ R_indicator<-function(dfs,response_identificators,variables,
     if(length(strata)<length(dfs)) strata<-c(rep(strata[1],length(dfs)))
   }
   
-
+  
   
   
   results<-list()
@@ -2376,8 +2416,7 @@ R_indicator_func<-function(df,response_identificator,variables,
   if(is.null(strata)==FALSE) strata <- df[,strata]
   df$insample<-df[,response_identificator]
   
-  #df<-df[stats::complete.cases(df[,c(variables,"insample")]),]
- 
+  
   
   df_design <- survey::svydesign(
     data = df,
@@ -2388,11 +2427,23 @@ R_indicator_func<-function(df,response_identificator,variables,
   
   formula<-stats::as.formula(paste("insample ~",paste(variables, collapse = " + ")))
   
-  model<-survey::svyglm(design=df_design, formula =formula,family = stats::quasibinomial("logit"))
+  model<-survey::svyglm(design=df_design, formula =formula,family = stats::binomial("logit"))
+  vcov_model<-suppressWarnings(stats::glm(data=df, formula =formula,family = stats::binomial("logit"),weights = weights))
   
-  
-  #Response_propensity <- stats::predict(model,type = "response")
   Response_propensity <-model$fitted.values
+  
+  sigma<- stats::vcov(vcov_model)
+  x <- stats::model.matrix(model$formula, df)[,colnames(sigma)]
+  link <- stats::predict(model, type = 'link')
+  z = (exp(link) / (1 + exp(link))^2) *x
+  
+  var_R<-getVarianceRSampleBased(Response_propensity,
+                                 z,
+                                 sigma,
+                                 df_design)
+  
+  
+  
   
   estimated_pop_variance<- survey::svyvar(x= Response_propensity, design=df_design)
   
@@ -2402,12 +2453,68 @@ R_indicator_func<-function(df,response_identificator,variables,
   
   mcfadden <- function(model){1- (model$deviance/model$null.deviance)}
   
-  output<-c(r_indicator,survey::SE(estimated_pop_std_dev))
+  output<-c(r_indicator,sqrt(var_R))
   if(get_r2==TRUE) output<-c(output, mcfadden(model))
   if(get_r2==FALSE) names(output)<-c("R-Indicator","SE")
   if(get_r2==TRUE) names(output)<-c("R-Indicator","SE", "Pseudo R2")
   output
 }
+
+
+
+
+
+getVarianceRSampleBased <-
+  function(prop,
+           z,
+           sigma,
+           design){
+    
+    weights <- weights(design)
+    nSample <- length(weights)
+    nPopulation <- sum(weights)
+    
+    
+    propMean <- stats::weighted.mean(prop, weights)
+    propVar <- weightedVar(prop, weights, method = 'ML')
+    propZ <- cbind(prop, z)
+    
+    
+    A <- stats::cov.wt(propZ, wt = weights, method = 'ML')$cov[-1, 1]
+    B <- stats::cov.wt(z, wt = weights, method = 'ML')$cov
+    #C <- design$getVarTotal(design, (prop - propMean)^2)
+    C<- stats::vcov(survey::svytotal((prop - propMean)^2, design = design))
+    if(design$has.strata==F & !any(weights!=1))C<-0
+    
+    variance <- numeric()
+    variance[1] <- 4 * t(A) %*% sigma %*% A
+    variance[2] <- 2 * getTrace(B %*% sigma %*% B %*% sigma)
+    variance[3] <- C / nPopulation^2
+    variance <- sum(variance) / propVar
+    return (variance)
+  }
+
+
+weightedVar <-
+  function(x,
+           weights = rep(1, length(x)),
+           method = c('unbiased', 'ML')) {
+    
+    xMean <- stats::weighted.mean(x, weights)
+    xVar <- sum(weights * (x - xMean)^2)
+    xVar <- switch(match.arg(method),
+                   'unbiased' = xVar / (sum(weights) - 1),
+                   'ML'       = xVar / sum(weights))
+    
+    return (xVar)
+  }
+
+
+getTrace <-
+  function(m){
+    return (sum(m[col(m) == row(m)]))
+  }
+
 
 
 

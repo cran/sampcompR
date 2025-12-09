@@ -136,7 +136,7 @@ uni_compare_table<-function(uni_compare_object,
       rmse<- uni_compare_object$data %>%
         dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>%
         dplyr::group_by("name_dfs") %>% 
-        dplyr::summarise(unique(rmse))
+        dplyr::reframe(unique(rmse))
       rmse<-as.numeric(as.data.frame(rmse)[,2])
       base<-base::rbind(base,c("RMSE",format(round(rmse, digits=ndigits), nsmall=ndigits)))
     }
@@ -146,7 +146,7 @@ uni_compare_table<-function(uni_compare_object,
       mse<- uni_compare_object$data %>%
         dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>%
         dplyr::group_by("name_dfs") %>% 
-        dplyr::summarise(unique(mse))
+        dplyr::reframe(unique(mse))
       mse<-as.numeric(as.data.frame(mse)[,2])
       base<-base::rbind(base,c("MSE",format(round(mse, digits=ndigits), nsmall=ndigits)))
     }
@@ -156,7 +156,7 @@ uni_compare_table<-function(uni_compare_object,
       avg<- uni_compare_object$data %>%
         dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>% 
         dplyr::group_by("name_dfs") %>% 
-        dplyr::summarise(unique(avg))
+        dplyr::reframe(unique(avg))
       avg<-as.numeric(as.data.frame(avg)[,2])
       base<-rbind(base,c("Average Error",format(round(avg, digits=ndigits), nsmall=ndigits)))
     }
@@ -165,7 +165,7 @@ uni_compare_table<-function(uni_compare_object,
       R_indicator<- uni_compare_object$data %>%
         dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>%
         dplyr::group_by("name_dfs") %>% 
-        dplyr::summarise(unique(R_indicator))
+        dplyr::reframe(unique(R_indicator))
       R_indicator<-as.numeric(as.data.frame(R_indicator)[,2])
       base<-rbind(base,c("R-Indicator",format(round(R_indicator, digits=ndigits), nsmall=ndigits)))
     }
@@ -178,7 +178,7 @@ uni_compare_table<-function(uni_compare_object,
     rmse<- uni_compare_object$data %>%
       dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>%
       dplyr::group_by("name_dfs") %>% 
-      dplyr::summarise(unique(rmse))
+      dplyr::reframe(unique(rmse))
     rmse<-as.numeric(as.data.frame(rmse)[,2])
     base<-rbind(base,c("RANK",paste(rank(round(rmse, digits=ndigits)))))
   }
@@ -188,7 +188,7 @@ uni_compare_table<-function(uni_compare_object,
     mse<- uni_compare_object$data %>%
       dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>%
       dplyr::group_by("name_dfs") %>% 
-      dplyr::summarise(unique(mse))
+      dplyr::reframe(unique(mse))
     mse<-as.numeric(as.data.frame(mse)[,2])
     base<-rbind(base,c("RANK",paste(rank(round(mse, digits=ndigits)))))
   }
@@ -198,7 +198,7 @@ uni_compare_table<-function(uni_compare_object,
     avg<- uni_compare_object$data %>%
       dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>%
       dplyr::group_by("name_dfs") %>% 
-      dplyr::summarise(unique(avg))
+      dplyr::reframe(unique(avg))
     avg<-as.numeric(as.data.frame(avg)[,2])
     base<-rbind(base,c("RANK",paste(rank(round(avg, digits=ndigits)))))
   }
@@ -208,7 +208,7 @@ uni_compare_table<-function(uni_compare_object,
     R_indicator<- uni_compare_object$data %>%
       dplyr::mutate(name_dfs=factor("name_dfs",levels=uni_compare_object$name_dfs)) %>%
       dplyr::group_by("name_dfs") %>% 
-      dplyr::summarise(unique(R_indicator))
+      dplyr::reframe(unique(R_indicator))
     R_indicator<-as.numeric(as.data.frame(R_indicator)[,2])
     base<-rbind(base,c("RANK",paste(rank(round(R_indicator, digits=ndigits)))))
   }
@@ -464,6 +464,7 @@ uni_compare_table2<-function(uni_compare_object, conf_adjustment=FALSE,names=NUL
 #' 
 #' ## Get Data for comparison
 #' 
+#' \dontrun{
 #' data("card")
 #' 
 #' north <- card[card$south==0,]
@@ -476,7 +477,7 @@ uni_compare_table2<-function(uni_compare_object, conf_adjustment=FALSE,names=NUL
 #'                                    data=TRUE)
 #'                         
 #' table<-sampcompR::biv_compare_table(bivar_data, type="diff", comparison_number=1)
-#' noquote(table)
+#' noquote(table)}
 #' 
 #'
 #' @export
@@ -910,6 +911,7 @@ descriptive_table<-function(dfs,variables,varlabels=NULL, weight=NULL,
 #' 
 #' @examples
 #' 
+#' \dontrun{
 #' data("card")
 #' 
 #' north <- card[card$south==0,]
@@ -922,7 +924,7 @@ descriptive_table<-function(dfs,variables,varlabels=NULL, weight=NULL,
 #'                                    data=TRUE)
 #' 
 #' table<-sampcompR::biv_per_variable(bivar_data)
-#' noquote(table)
+#' noquote(table)}
 #' 
 #' @export
 
@@ -1323,6 +1325,7 @@ out
 #' 
 #' @examples
 #' 
+#' \dontrun{
 #' data("card")
 #' 
 #' north <- card[card$south==0,]
@@ -1340,7 +1343,7 @@ out
 #' 
 #' table2<-sampcompR::biv_bias_per_variable(bivar_data,type = "diff",
 #'                                          final_col="difference",ndigits=2)
-#' noquote(table2)
+#' noquote(table2)}
 #' 
 #' @importFrom rlang :=
 #' @export
@@ -1373,14 +1376,14 @@ biv_bias_per_variable<-function(biv_compare_object, type="rel_diff",
   output3<-biv_compare_object[[1]] %>% 
     dplyr::mutate(samp_name=factor(samp_name,levels=unique(samp_name))) %>%
     dplyr::group_by(samp_name) %>%
-    dplyr::summarise(mean=mean(new_diff, na.rm=T)) %>% 
+    dplyr::reframe(mean=mean(new_diff, na.rm=T)) %>% 
     dplyr::select(samp_name,mean)
   
   if(final_col=="difference") output4<-output3$mean[nrow(output3)]-output3$mean[1]
   
   if(final_col=="average") {
     output4<-biv_compare_object[[1]] %>% 
-      dplyr::summarise(mean=mean(new_diff, na.rm=T))
+      dplyr::reframe(mean=mean(new_diff, na.rm=T))
     output4<-output4$mean
   }
   
@@ -1439,7 +1442,7 @@ biv_bias_per_var_sub<-function(biv_compare_object,var){
     dplyr::mutate(samp_name=factor(samp_name,levels=unique(samp_name)),
                   !!var:=ifelse(x==var|y==var,1,0)) %>%
     dplyr::group_by(samp_name,dplyr::across(dplyr::all_of(var))) %>%
-    dplyr::summarise(mean=mean(new_diff, na.rm=T))
+    dplyr::reframe(mean=mean(new_diff, na.rm=T))
   
   out<-suppressWarnings(dplyr::filter(out,dplyr::across(dplyr::all_of(var))==1) %>% 
                             dplyr::select(samp_name,mean))
@@ -1463,7 +1466,7 @@ biv_bias_per_var_sub2<-function(biv_compare_object,var){
     dplyr::mutate(samp_name=factor(samp_name,levels=unique(samp_name)),
                   !!var:=ifelse(x==var|y==var,1,0)) %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(var))) %>%
-    dplyr::summarise(mean=mean(new_diff, na.rm=T))
+    dplyr::reframe(mean=mean(new_diff, na.rm=T))
   
   out<-suppressWarnings(dplyr::filter(out,dplyr::across(dplyr::all_of(var))==1) %>% 
                           dplyr::select(mean))
@@ -1579,7 +1582,7 @@ missing_table_sub <- function(dataframe, df_name, variables) {
   # Calculate the count of missing values for selected variables in 'dataframe'
   out <- dataframe %>%
     dplyr::select(variables) %>%
-    dplyr::summarise(dplyr::across(variables, ~sum(is.na(.)))) %>% 
+    dplyr::reframe(dplyr::across(variables, ~sum(is.na(.)))) %>% 
     t() %>% 
     as.data.frame()
   
